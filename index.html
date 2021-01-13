@@ -10,271 +10,273 @@
     <title>Kanban App</title>
 </head>
 <body>
-    <!-- Navbar -->
-    <!-- <nav class="navbar navbar-expand">
-        <div class="container-fluid p-2 ps-4 ms-5 me-5 mt-3 navbar-light bg-light">
-            <span class="navbar-brand">Kanban App</span>
-            <div class="navbar-collapse">
-                <ul class="navbar-nav">
-                    <li class="navbar-item">
-                        <a href="#" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Boards</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Teams</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
-                    </li>
-                </ul>
+    <div id="app">
+        <div v-if="page === 'login'">
+            <!-- Login Form -->
+            <div class="card mx-auto" style="width: 400px; margin-top: 6em; border-radius: 20px;">
+                <form class="card-body p-5" @submit.prevent="login">
+                    <h4 class="text-center mb-3">Kanban App Login</h4>
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <label for="loginEmail" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-auto" style="width: 15em;">
+                            <input v-model="loginUser.email" type="email" name="loginEmail" id="loginEmail" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <label for="loginPassword" class="col-form-label">Password</label>
+                        </div>
+                        <div class="col-auto" style="width: 15em;">
+                            <input v-model="loginUser.password" type="password" name="loginPassword" id="loginPassword" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <a href="#" class="fs-6 mb-3" @click.prevent="changePage('register')">Not have a account yet? Click here to register</a>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <div class="g-signin2 mb-3" data-onsuccess="onSignIn"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
             </div>
         </div>
-    </nav> -->
+
+        <div v-else-if="page === 'register'">
+            <!-- Register Form -->
+            <div class="card mx-auto" style="width: 500px; margin-top: 6em; border-radius: 20px;">
+                <form class="card-body p-5" @submit.prevent="register">
+                    <h4 class="text-center mb-3">Register New Account</h4>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <label for="registerUserName" class="col-form-label">User Name</label>
+                        </div>
+                        <div class="col-auto" style="width: 15em;">
+                            <input v-model="user.userName" type="text" name="registerUserName" id="registerUserName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <label for="registerEmail" class="col-form-label">Email</label>
+                        </div>
+                        <div class="col-auto" style="width: 15em;">
+                            <input v-model="user.email" type="email" name="registerEmail" id="registerEmail" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <label for="registerPassword" class="col-form-label">Password</label>
+                        </div>
+                        <div class="col-auto" style="width: 15em;">
+                            <input v-model="user.password" type="password" name="registerPassword" id="registerPassword" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <a href="#" class="fs-6 mb-3" @click.prevent="changePage('login')">Back to Login Page</a>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto" style="width: 15em;">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div v-else>
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand">
+                <div class="container-fluid p-2 ps-4 ms-5 me-5 mt-3 navbar-light bg-light">
+                    <span class="navbar-brand">Kanban App</span>
+                    <div class="navbar-collapse">
+                        <ul class="navbar-nav">
+                            <li class="navbar-item">
+                                <a href="#" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Boards</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Teams</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            
+            <div v-if="page === 'main-page'">
+                <!-- Task List -->
+                <main class="d-flex flex-wrap bd-highlight mt-5 justify-content-start" style="height: 40vh; width: 80%; margin: auto;">
+                    <div class="d-flex p-4 flex-column mb-4 me-5 overflow-auto" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;" v-for="category in categories" :key="category.id" v-html="category">
+                        <!-- {{ category }} -->
+                        <!-- <div v-html="category[{category.id}]"></div> -->
+                    </div>
+                    <!-- <div class="d-flex p-4 flex-column mb-4 me-5 overflow-auto" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
+                        <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">todo</div>
+                        <div id="tasks-card"></div>
+                        <button class="btn btn-secondary">+ Add new task</button>
+                    </div>
+                    <div class="d-flex p-4 flex-column mb-4 me-5 overflow-auto" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
+                        <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">doing</div>
+                        <div id="tasks-card">
     
-    <!-- Task List -->
-    <!-- <main class="d-flex flex-wrap bd-highlight mt-5 justify-content-start" style="height: 60vh; width: 80%; margin: auto;">
-        <div class="d-flex p-4 flex-column mb-4 me-5" style="background-color: orange; width: 20%; border-radius: 15px;">
-            <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">backlog</div>
-            <div id="tasks-card">
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Task Title</h5>
-                        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                        <a href="#" class="btn btn-primary">Edit Task</a>
-                        <a href="#" class="btn btn-danger">Delete Task</a>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5 class="card-title">Task Title</h5>
+                                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
+                                <a href="#" class="btn btn-primary">Edit Task</a>
+                                <a href="#" class="btn btn-danger">Delete Task</a>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5 class="card-title">Task Title</h5>
+                                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
+                                <a href="#" class="btn btn-primary">Edit Task</a>
+                                <a href="#" class="btn btn-danger">Delete Task</a>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">+ Add new task</button>
                     </div>
-                </div>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Task Title</h5>
-                        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                        <a href="#" class="btn btn-primary">Edit Task</a>
-                        <a href="#" class="btn btn-danger">Delete Task</a>
-                    </div>
-                </div>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Task Title</h5>
-                        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                        <a href="#" class="btn btn-primary">Edit Task</a>
-                        <a href="#" class="btn btn-danger">Delete Task</a>
-                    </div>
-                </div>
+                    <div class="d-flex p-4 flex-column mb-4 me-5 overflow-auto" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
+                        <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">done</div>
+                        <div id="tasks-card"></div>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5 class="card-title">Task Title</h5>
+                                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
+                                <a href="#" class="btn btn-primary">Edit Task</a>
+                                <a href="#" class="btn btn-danger">Delete Task</a>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5 class="card-title">Task Title</h5>
+                                <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
+                                <a href="#" class="btn btn-primary">Edit Task</a>
+                                <a href="#" class="btn btn-danger">Delete Task</a>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">+ Add new task</button>
+                    </div> -->
+                </main>
             </div>
-            <button class="btn btn-secondary">+ Add new task</button>
-        </div>
-        <div class="d-flex p-4 flex-column mb-4 me-5" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
-            <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">todo</div>
-            <div id="tasks-card"></div>
-            <button class="btn btn-secondary">+ Add new task</button>
-        </div>
-        <div class="d-flex p-4 flex-column mb-4 me-5" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
-            <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">doing</div>
-            <div id="tasks-card">
 
-            </div>
-            <div class="card mb-2">
-                <div class="card-body">
-                    <h5 class="card-title">Task Title</h5>
-                    <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                    <a href="#" class="btn btn-primary">Edit Task</a>
-                    <a href="#" class="btn btn-danger">Delete Task</a>
-                </div>
-            </div>
-            <div class="card mb-2">
-                <div class="card-body">
-                    <h5 class="card-title">Task Title</h5>
-                    <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                    <a href="#" class="btn btn-primary">Edit Task</a>
-                    <a href="#" class="btn btn-danger">Delete Task</a>
-                </div>
-            </div>
-            <button class="btn btn-secondary">+ Add new task</button>
-            </div>
-        </div>
-        <div class="d-flex p-4 flex-column mb-4 me-5" style="background-color: orange; width: 20%; height: max-content; border-radius: 15px;">
-            <div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">done</div>
-            <div id="tasks-card">
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">Task Title</h5>
-                        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque earum placeat, illo nam quos ipsum necessitatibus ullam? Porro, error beatae.</p>
-                        <a href="#" class="btn btn-primary">Edit Task</a>
-                        <a href="#" class="btn btn-danger">Delete Task</a>
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-secondary">+ Add new task</button>
-        </div>
-    </main> -->
 
-    <!-- Login Form -->
-    <div class="card mx-auto" style="width: 400px; margin-top: 6em; border-radius: 20px;">
-        <form class="card-body p-5">
-            <h4 class="text-center mb-3">Kanban App Login</h4>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="loginEmail" class="col-form-label">Email</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="email" name="loginEmail" id="loginEmail" class="form-control">
+            <div v-else-if="page === 'add-task'">
+                <!-- Add New Task -->
+                <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
+                    <form class="card-body p-5">
+                        <h4 class="text-center mb-3">Add New Task</h4>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="title" class="col-form-label">Title</label>
+                            </div>
+                            <div class="col-auto" style="width: 15em;">
+                                <input type="text" name="title" id="title" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="description" class="col-form-label">Description</label>
+                            </div>
+                            <div class="col-auto" style="width: 15em;">
+                                <input type="text" name="description" id="description" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="categoryId" class="col-form-label">Categories</label>
+                            </div>
+                            <div class="col-auto">
+                                <select name="categoryId" id="categoryId">
+                                    <option value="">Backlog</option>
+                                    <option value="">Todo</option>
+                                    <option value="">Doing</option>
+                                    <option value="">Done</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="loginPassword" class="col-form-label">Password</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="password" name="loginPassword" id="loginPassword" class="form-control">
+    
+            <div v-else-if="page === 'update-task'">
+                <!-- Update Task -->
+                <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
+                    <form class="card-body p-5">
+                        <h4 class="text-center mb-3">Update Task</h4>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="title" class="col-form-label">Title</label>
+                            </div>
+                            <div class="col-auto" style="width: 15em;">
+                                <input type="text" name="title" id="updateTitle" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="description" class="col-form-label">Description</label>
+                            </div>
+                            <div class="col-auto" style="width: 15em;">
+                                <input type="text" name="description" id="updateDescription" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="categoryId" class="col-form-label">Categories</label>
+                            </div>
+                            <div class="col-auto">
+                                <select name="categoryId" id="updateCategoryId">
+                                    <option value="">Backlog</option>
+                                    <option value="">Todo</option>
+                                    <option value="">Doing</option>
+                                    <option value="">Done</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-auto">
-                    <a href="#" class="fs-6 mb-3">Not have a account yet? Click here to register</a>
+    
+            <div v-else-if="page === 'add-category'">
+                <!-- Add New Category -->
+                <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
+                    <form class="card-body p-5">
+                        <h4 class="text-center mb-3">Add New Category</h4>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label for="name" class="col-form-label">Name</label>
+                            </div>
+                            <div class="col-auto" style="width: 15em;">
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-auto">
-                    <div class="g-signin2 mb-3" data-onsuccess="onSignIn"></div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+
+        </div>
+
     </div>
 
-    <!-- Register Form -->
-    <!-- <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
-        <form class="card-body p-5">
-            <h4 class="text-center mb-3">Register New Account</h4>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="registerUserName" class="col-form-label">User Name</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="registerUserName" id="registerUserName" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="registerEmail" class="col-form-label">Email</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="email" name="registerEmail" id="registerEmail" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="registerPassword" class="col-form-label">Password</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="password" name="registerPassword" id="registerPassword" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-auto">
-                    <a href="#" class="fs-6 mb-3">Back to Login Page</a>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-auto" style="width: 15em;">
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </div>
-            </div>
-        </form>
-    </div> -->
-
-    <!-- Add New Task -->
-    <!-- <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
-        <form class="card-body p-5">
-            <h4 class="text-center mb-3">Add New Task</h4>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="title" class="col-form-label">Title</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="title" id="title" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="description" class="col-form-label">Description</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="description" id="description" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="categoryId" class="col-form-label">Categories</label>
-                </div>
-                <div class="col-auto">
-                    <select name="categoryId" id="categoryId">
-                        <option value="">Backlog</option>
-                        <option value="">Todo</option>
-                        <option value="">Doing</option>
-                        <option value="">Done</option>
-                    </select>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-    </div> -->
-
-    <!-- Update Task -->
-    <!-- <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
-        <form class="card-body p-5">
-            <h4 class="text-center mb-3">Update Task</h4>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="title" class="col-form-label">Title</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="title" id="updateTitle" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="description" class="col-form-label">Description</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="description" id="updateDescription" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="categoryId" class="col-form-label">Categories</label>
-                </div>
-                <div class="col-auto">
-                    <select name="categoryId" id="updateCategoryId">
-                        <option value="">Backlog</option>
-                        <option value="">Todo</option>
-                        <option value="">Doing</option>
-                        <option value="">Done</option>
-                    </select>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-    </div> -->
-
-    <!-- Add New Category -->
-    <!-- <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
-        <form class="card-body p-5">
-            <h4 class="text-center mb-3">Add New Category</h4>
-            <div class="row mb-3">
-                <div class="col-sm-3">
-                    <label for="name" class="col-form-label">Name</label>
-                </div>
-                <div class="col-auto" style="width: 15em;">
-                    <input type="text" name="name" id="name" class="form-control">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-    </div> -->
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="./assets//script/main.js"></script>
 </body>
 </html>
