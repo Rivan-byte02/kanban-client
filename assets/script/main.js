@@ -13,7 +13,11 @@ const app = new Vue({
             password: ''
         },
         categories: [],
-        tasks: []
+        task: {
+            title: '',
+            description: '',
+            categoryId: null
+        }
     },
     methods: {
         changePage(page){
@@ -81,32 +85,105 @@ const app = new Vue({
                 }
             })
             .then(res => {
-                // this.tasks = res.data;
-                // this.categories = res.data;
-                res.data.forEach(category => {
-                    this.tasks = [];
-                    if (category.Tasks.length) {
-                        category.Tasks.forEach(el => {
-                            this.tasks.push(
-                                `<div class="card mb-2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${el.title}</h5>
-                                        <p class="card-text">${el.description}</p>
-                                        <a href="#" class="btn btn-primary" @click.prevent="edit(${el.id})">Edit Task</a>
-                                        <a href="#" class="btn btn-danger" @click.prevent="delete(${el.id})">Delete Task</a>
-                                    </div>
-                                </div>`
-                            )
-                        });
-                    }
-                    this.categories.push(
-                        `<div class="text-capitalize test-wrap bg-primary badge text-start fs-3 mb-2">${category.name}</div>
-                        <div id="tasks-card" v-html="${this.tasks}">
-                        </div>
-                        <button class="btn btn-secondary">+ Add new task</button>`
-                        )
-                    })
+                this.categories = res.data;
                 console.log(this.categories);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        createTask(){
+            const { title, description, categoryId } = this.task;
+            axios({
+                method: 'POST',
+                url: this.baseUrl+`/tasks`,
+                data: {
+                    title,
+                    description,
+                },
+                headers: {
+                    access_token: localStorage.access_token
+                },
+                params: {
+                    category: categoryId
+                }
+            })
+            .then(res => {
+                console.log(res.data);
+                this.task.title = '';
+                this.task.description = '';
+                this.task.categoryId= null;
+                this.checkAuth()
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        fetchOneTask(id){
+            axios({
+                method: 'GET',
+                url: this.baseUrl+`/tasks/${id}`,
+                headers: {
+                    access_token: localStorage.access_token
+                }
+            })
+            .then(res => {
+                console.log(res.data);
+                const { title , description, CategoryId } = res.data;
+                this.task.title = title;
+                this.task.description = description;
+                this.task.categoryId = CategoryId;
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        edit(id){
+            localStorage.setItem('taskId', id);
+            this.changePage('update-task');
+            this.fetchOneTask(id);
+        },
+        updateTask(){
+            const { title, description, categoryId } = this.task;
+            const id = localStorage.taskId;
+            axios({
+                method: 'PUT',
+                url: this.baseUrl+`/tasks/${id}`,
+                headers: {
+                    access_token: localStorage.access_token
+                },
+                data: {
+                    title,
+                    description,
+                },
+                params: {
+                    category: categoryId
+                }
+            })
+            .then(res => {
+                console.log(res.data);
+                localStorage.removeItem('taskId');
+                this.task.title = '';
+                this.task.description = '';
+                this.task.categoryId= null;
+                this.checkAuth()
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        deleteTask(id){
+            console.log(id);
+            axios({
+                method: 'DELETE',
+                url: this.baseUrl+`/tasks/${id}`,
+                headers: {
+                    access_token: localStorage.access_token
+                }
+            })
+            .then(res => {
+                console.log(res.data);
+                this.checkAuth();
             })
             .catch(err => {
                 console.log(err);
