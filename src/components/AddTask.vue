@@ -1,6 +1,6 @@
 <template>
     <!-- Add New Task -->
-    <div class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
+    <main class="card mx-auto" style="width: 450px; margin-top: 6em; border-radius: 20px;">
         <form class="card-body p-5" @submit.prevent="createTask">
             <h4 class="text-center mb-3">Add New Task</h4>
             <div class="row mb-3">
@@ -32,7 +32,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Add</button>
         </form>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -62,5 +62,8 @@ export default {
 </script>
 
 <style>
-
+    main {
+        width: 1600px;
+        margin: 0 7em;
+    }
 </style>

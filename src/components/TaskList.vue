@@ -1,13 +1,14 @@
 <template>
     <!-- Task List -->
-    <main class="d-flex flex-wrap bd-highlight mt-5 justify-content-start" style="height: 40vh; width: 80%; margin: auto;">
+    <main class="d-flex flex-wrap bd-highlight mt-5 justify-content-start" style="height: 40vh; width: 1500px; margin: 0 12em;">
         <task-card 
         v-for="category in categories" 
         :key="category.id" 
         :category="category" 
         @categoryId="addTask" 
         @editTask="editTask" 
-        @deleteTask="deleteTask"></task-card>
+        @deleteTask="deleteTask"
+        @moveCategory="moveCategory"></task-card>
     </main>
 </template>
 
@@ -20,11 +21,6 @@ export default {
     props: [
         "categories"
     ],
-    data() {
-        return {
-            
-            }
-    },
     components: {
         TaskCard
     },
@@ -38,6 +34,9 @@ export default {
         },
         editTask(payload) {
             return this.$emit('editTask', payload);
+        },
+        moveCategory(payload) {
+            return this.$emit('moveCategory', payload);
         },
         deleteTask(payload) {
             return this.$emit('deleteTask', payload);
