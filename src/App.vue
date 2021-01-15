@@ -54,7 +54,7 @@ export default {
     data() {
         return {
             page: "login",
-            url: `http://localhost:3000`,
+            url: `https://rivan-kanban.herokuapp.com`,
             categories: [],
             task: {
                 title: '',
